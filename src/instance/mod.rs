@@ -73,33 +73,3 @@ impl Instance {
         &self.s
     }
 }
-
-pub fn prange(instance: &Instance, max_tries: Option<usize>) -> Option<ColVec<F2>> {
-    let (w, h, s) = (instance.w, &instance.h, &instance.s);
-    let k = h.cols() - h.rows();
-    let f2 = h.field();
-    let mut tries = 0;
-    loop {
-        // if let Some((u, _, p)) = h.random_standard_form() {
-        //     let us = u * s;
-        //     if us.weight() <= w {
-        //         let z = ColVec::zero(Field::Some(f2), k);
-        //         let z_us = ColVec::from(Mat::vconcat(&z.into(), &us.into()));
-        //         return Some(p * z_us);
-        //     }
-        // }
-        let (u, _, p) = h.parity_check_random_standard_form();
-        let us = u * s;
-        if us.weight() <= w {
-            let z = ColVec::zero(Field::Some(f2), k);
-            let z_us = ColVec::from(Mat::vconcat(&z.into(), &us.into()));
-            return Some(p * z_us);
-        }
-        tries += 1;
-        if let Some(max) = max_tries {
-            if tries == max {
-                return None;
-            }
-        }
-    }
-}

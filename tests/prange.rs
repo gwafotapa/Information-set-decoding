@@ -1,6 +1,6 @@
 // use std::fs;
 
-use syndrome_decoding_problem::isd::{prange, Instance};
+use information_set_decoding::{instance::Instance, prange};
 
 pub mod common;
 
@@ -19,20 +19,28 @@ pub mod common;
 #[test]
 fn prange_10_0() {
     let inst = Instance::read_instance("instances/SD_10_0").unwrap();
-    let e = prange(&inst, None).unwrap();
+    let e = prange::prange(&inst, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
 
 #[test]
 fn prange_20_0() {
     let inst = Instance::read_instance("instances/SD_20_0").unwrap();
-    let e = prange(&inst, None).unwrap();
+    let e = prange::prange(&inst, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
 
 #[test]
 fn prange_100_0() {
     let inst = Instance::read_instance("instances/SD_100_0").unwrap();
-    let e = prange(&inst, None).unwrap();
+    let e = prange::prange(&inst, None).unwrap();
+    assert_eq!(inst.h() * e, *inst.s());
+}
+
+#[ignore]
+#[test]
+fn prange_200_0() {
+    let inst = Instance::read_instance("instances/SD_200_0").unwrap();
+    let e = prange::prange(&inst, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }

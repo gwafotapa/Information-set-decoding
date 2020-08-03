@@ -2,7 +2,7 @@ use log::debug;
 use main_error::MainError;
 use std::env;
 
-use syndrome_decoding_problem::isd::{self, Instance};
+use information_set_decoding::{instance::Instance, prange};
 
 // type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -22,7 +22,7 @@ fn main() -> std::result::Result<(), MainError> {
         inst.h(),
         inst.s()
     );
-    let e = isd::prange(&inst, None).unwrap();
+    let e = prange::prange(&inst, None).unwrap();
     for i in 0..e.rows() {
         print!("{}", e[i]);
     }
