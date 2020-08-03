@@ -79,6 +79,12 @@ impl WeightedBitVector {
         return true;
     }
 
+    pub fn reset(&mut self) {
+        for i in 0..self.weight() {
+            self.support[i] = i;
+        }
+    }
+
     pub fn len(&self) -> usize {
         self.len
     }
