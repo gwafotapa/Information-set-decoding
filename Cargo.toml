@@ -11,4 +11,4 @@ env_logger = "0.7.1"
 log = "0.4.8"
 main_error = "0.1.0"
 mceliece = { path = "../mceliece" }
-# num-integer = "0.1.43"
+num-integer = "0.1.43"

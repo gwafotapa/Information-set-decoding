@@ -2,12 +2,13 @@
 
 // use std::ops::{Index, IndexMut};
 
-pub struct WeightedBitVector {
+#[derive(Clone, Debug)]
+pub struct WeightedVector {
     support: Vec<usize>,
     len: usize,
 }
 
-// impl Index<usize> for WeightedBitVector {
+// impl Index<usize> for WeightedVector {
 //     type Output = u32;
 
 //     fn index(&self, index: usize) -> &Self::Output {
@@ -15,13 +16,13 @@ pub struct WeightedBitVector {
 //     }
 // }
 
-// impl IndexMut<usize> for WeightedBitVector {
+// impl IndexMut<usize> for WeightedVector {
 //     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
 //         &mut self.data[index]
 //     }
 // }
 
-impl WeightedBitVector {
+impl WeightedVector {
     // pub fn new(n: usize, w: usize) -> Self {
     //     let vec = vec![0; n];
     //     for i in 0..w {
