@@ -37,7 +37,7 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
             for j in 0..l {
                 l1[i][j] = f2.zero();
                 for m in 0..p {
-                    l1[i][j] = f2.add(l1[i][j], q1[(j, ex[i].support()[m])]);
+                    f2.add_assign(&mut l1[i][j], &q1[(j, ex[i].support()[m])]);
                 }
             }
         }
@@ -47,7 +47,7 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
             for j in 0..l {
                 q2e2_us[j] = us[j];
                 for m in 0..p {
-                    q2e2_us[j] = f2.add(q2e2_us[j], q2[(j, ex[i].support()[m])]);
+                    f2.add_assign(&mut q2e2_us[j], &q2[(j, ex[i].support()[m])]);
                 }
             }
             for j in 0..e1_len {
@@ -57,12 +57,12 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
                     }
                     for &col in ex[j].support() {
                         for i in 0..us.rows() {
-                            qe_us[i] = f2.add(qe_us[i], h_sf[(i, col)]);
+                            f2.add_assign(&mut qe_us[i], &h_sf[(i, col)]);
                         }
                     }
                     for &col in ex[i].support() {
                         for i in 0..us.rows() {
-                            qe_us[i] = f2.add(qe_us[i], h_sf[(i, k1 + col)]);
+                            f2.add_assign(&mut qe_us[i], &h_sf[(i, k1 + col)]);
                         }
                     }
                     if qe_us.weight() <= w - 2 * p {

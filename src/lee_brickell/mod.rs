@@ -27,7 +27,7 @@ pub fn lee_brickell(inst: &Instance, p: usize, max_tries: Option<usize>) -> Opti
             for i in 0..us.rows() {
                 sum[i] = us[i];
                 for &col in selection.support() {
-                    sum[i] = f2.add(sum[i], h_sf[(i, col)]);
+                    f2.add_assign(&mut sum[i], &h_sf[(i, col)]);
                 }
             }
             if sum.weight() <= w - p {
