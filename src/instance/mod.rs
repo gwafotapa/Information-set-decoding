@@ -5,9 +5,7 @@ use std::{
     rc::Rc,
 };
 
-use mceliece::{
-    finite_field::Field, finite_field::FieldTrait, finite_field::F2, matrix::ColVec, matrix::Mat,
-};
+use mceliece::{finite_field::Field, finite_field::F2, matrix::ColVec, matrix::Mat};
 
 pub struct Instance {
     n: usize,
@@ -37,8 +35,8 @@ impl Instance {
         let line5 = lines.next().ok_or("Line 5 (value of w) is missing.")?;
         let w = line5.parse::<usize>()?;
         lines.next().ok_or("Line 6 is missing.")?;
-        let f2 = &Rc::new(F2::generate(()));
-        let mut h = Mat::zero(Field::Some(f2), n / 2, n);
+        let f2 = Rc::new(F2::generate(()));
+        let mut h = Mat::zero(Rc::clone(&f2), n / 2, n);
         for j in 0..n / 2 {
             h[(j, j)] = 1;
             let line = lines.next().ok_or("Missing line for definition of H.")?;
@@ -47,7 +45,7 @@ impl Instance {
                 h[(i, n / 2 + j)] = bits.next().ok_or("Missing bits for definition of H.")?;
             }
         }
-        let mut s = ColVec::zero(Field::Some(f2), n / 2);
+        let mut s = ColVec::zero(f2, n / 2);
         lines.next().ok_or("Missing line after definition of H.")?;
         let line = lines.next().ok_or("Missing line for definition of s.")?;
         let mut bits = line.chars().map(|c| c.to_digit(2).unwrap());

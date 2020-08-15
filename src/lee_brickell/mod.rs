@@ -1,7 +1,8 @@
 use mceliece::{
-    finite_field::{Field, F2},
+    finite_field::F2,
     matrix::{ColVec, Mat, Perm},
 };
+use std::rc::Rc;
 
 use crate::instance::Instance;
 use crate::weighted_vector::WeightedVector;
@@ -12,10 +13,10 @@ pub fn lee_brickell(inst: &Instance, p: usize, max_tries: Option<usize>) -> Opti
     let k = h.cols() - h.rows();
     let f2 = h.field();
     let mut tries = 0;
-    let mut u = Mat::zero(Field::Some(f2), n - k, n - k);
-    let mut h_sf = Mat::zero(Field::Some(f2), n - k, n);
+    let mut u = Mat::zero(Rc::clone(&f2), n - k, n - k);
+    let mut h_sf = Mat::zero(Rc::clone(&f2), n - k, n);
     let mut pi = Perm::identity(n);
-    let mut us = ColVec::zero(Field::Some(f2), n - k);
+    let mut us = ColVec::zero(Rc::clone(&f2), n - k);
     let mut selection = WeightedVector::new(k, p);
     loop {
         h.parity_check_random_standard_form(&mut u, &mut h_sf, &mut pi);
@@ -28,7 +29,7 @@ pub fn lee_brickell(inst: &Instance, p: usize, max_tries: Option<usize>) -> Opti
                 }
             }
             if us.weight() <= w - p {
-                let mut e = ColVec::zero(Field::Some(f2), n);
+                let mut e = ColVec::zero(Rc::clone(&f2), n);
                 for &col in selection.support() {
                     e[col] = 1;
                 }
