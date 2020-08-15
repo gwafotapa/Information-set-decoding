@@ -25,7 +25,6 @@ fn compute_l(k: usize, p: usize) -> usize {
     l
 }
 
-// #[ignore]
 #[test]
 fn stern_10_0() {
     let inst = Instance::read_instance("instances/SD_10_0").unwrap();
@@ -36,7 +35,6 @@ fn stern_10_0() {
     assert_eq!(inst.h() * e, *inst.s());
 }
 
-// #[ignore]
 #[test]
 fn stern_20_0() {
     let inst = Instance::read_instance("instances/SD_20_0").unwrap();
@@ -47,7 +45,6 @@ fn stern_20_0() {
     assert_eq!(inst.h() * e, *inst.s());
 }
 
-// #[ignore]
 #[test]
 fn stern_100_0() {
     let inst = Instance::read_instance("instances/SD_100_0").unwrap();
@@ -58,7 +55,7 @@ fn stern_100_0() {
     assert_eq!(inst.h() * e, *inst.s());
 }
 
-// #[ignore]
+#[ignore]
 #[test]
 fn stern_200_0() {
     let inst = Instance::read_instance("instances/SD_200_0").unwrap();

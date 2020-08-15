@@ -1,4 +1,4 @@
-use log::debug;
+// use log::debug;
 use mceliece::{
     finite_field::{Field, F2},
     matrix::{ColVec, Mat, Perm, SubMat},
@@ -68,14 +68,14 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
                     if qe_us.weight() <= w - 2 * p {
                         let mut e = ColVec::zero(Rc::clone(&f2), n);
                         for &col in ex[j].support() {
-                            e[col] = 1;
+                            e[col] = f2.one();
                         }
                         for &col in ex[i].support() {
-                            e[k1 + col] = 1;
+                            e[k1 + col] = f2.one();
                         }
                         for (i, x) in qe_us.data().iter().enumerate() {
                             if *x == 1 {
-                                e[k + i] = 1;
+                                e[k + i] = f2.one();
                             }
                         }
                         return Some(pi * e);

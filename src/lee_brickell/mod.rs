@@ -1,5 +1,5 @@
 use mceliece::{
-    finite_field::F2,
+    finite_field::{Field, F2},
     matrix::{ColVec, Mat, Perm},
 };
 use std::rc::Rc;
@@ -17,25 +17,27 @@ pub fn lee_brickell(inst: &Instance, p: usize, max_tries: Option<usize>) -> Opti
     let mut h_sf = Mat::zero(Rc::clone(&f2), n - k, n);
     let mut pi = Perm::identity(n);
     let mut us = ColVec::zero(Rc::clone(&f2), n - k);
+    let mut sum = ColVec::zero(Rc::clone(&f2), n - k);
     let mut selection = WeightedVector::new(k, p);
     loop {
         h.parity_check_random_standard_form(&mut u, &mut h_sf, &mut pi);
         us.mul(&u, s);
         selection.reset();
         loop {
-            for &col in selection.support() {
-                for i in 0..us.rows() {
-                    us[i] += h_sf[(i, col)];
+            for i in 0..us.rows() {
+                sum[i] = us[i];
+                for &col in selection.support() {
+                    sum[i] = f2.add(sum[i], h_sf[(i, col)]);
                 }
             }
-            if us.weight() <= w - p {
+            if sum.weight() <= w - p {
                 let mut e = ColVec::zero(Rc::clone(&f2), n);
                 for &col in selection.support() {
-                    e[col] = 1;
+                    e[col] = f2.one();
                 }
-                for (i, x) in us.data().iter().enumerate() {
-                    if *x == 1 {
-                        e[k + i] = 1;
+                for (i, x) in sum.data().iter().enumerate() {
+                    if *x == f2.one() {
+                        e[k + i] = f2.one();
                     }
                 }
                 return Some(pi * e);

@@ -18,7 +18,6 @@ fn lee_brickell_20_0() {
     assert_eq!(inst.h() * e, *inst.s());
 }
 
-#[ignore]
 #[test]
 fn lee_brickell_100_0() {
     let inst = Instance::read_instance("instances/SD_100_0").unwrap();
