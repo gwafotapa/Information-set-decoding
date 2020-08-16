@@ -31,7 +31,6 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
     let e2_len = e2_supports.len();
     let mut l1 = vec![ColVec::zero(Rc::clone(&f2), l); e1_len];
     let mut q2e2_us = ColVec::zero(Rc::clone(&f2), l);
-    let mut qe_us = ColVec::zero(Rc::clone(&f2), n - k); // l first coordinates will be left null
     loop {
         // Randomly select an information set and put h in standard form
         h.parity_check_random_standard_form(&mut u, &mut h_sf, &mut pi);
@@ -68,14 +67,14 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
                 if l1[j] == q2e2_us {
                     let mut weight = 0;
                     for m in l..n - k {
-                        qe_us[m] = us[m];
+                        let mut qe_us_m = us[m]; // qe_us_m is the mth coefficient of column vector q * e + u * s
                         for &col in e1_supports[j].support() {
-                            f2.add_assign(&mut qe_us[m], &h_sf[(m, col)]);
+                            f2.add_assign(&mut qe_us_m, &h_sf[(m, col)]);
                         }
                         for &col in e2_supports[i].support() {
-                            f2.add_assign(&mut qe_us[m], &h_sf[(m, k1 + col)]);
+                            f2.add_assign(&mut qe_us_m, &h_sf[(m, k1 + col)]);
                         }
-                        if qe_us[m] == f2.one() {
+                        if qe_us_m == f2.one() {
                             weight += 1;
                             if weight > w - 2 * p {
                                 break;
@@ -90,6 +89,7 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
                         for &col in e2_supports[i].support() {
                             e[k1 + col] = f2.one();
                         }
+                        let qe_us = &h_sf * &e + &us;
                         for (i, x) in qe_us.data().iter().enumerate() {
                             if *x == 1 {
                                 e[k + i] = f2.one();
