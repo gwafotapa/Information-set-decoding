@@ -21,33 +21,37 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
     let mut h_sf = Mat::zero(Rc::clone(&f2), n - k, n);
     let mut pi = Perm::identity(n);
     let mut us = ColVec::zero(Rc::clone(&f2), n - k);
-    let ex = stern_list_weighted_vectors(k1, p);
-    let e1_len = num_integer::binomial(k1, p);
-    let e2_len = num_integer::binomial(k2, p);
+    let e1_selection = Rc::new(stern_list_weighted_vectors(k1, p));
+    let e2_selection = if k1 == k2 {
+        Rc::clone(&e1_selection)
+    } else {
+        Rc::new(stern_list_weighted_vectors(k2, p))
+    };
+    let e1_len = e1_selection.len();
+    let e2_len = e2_selection.len();
+    // let e1_len = num_integer::binomial(k1, p);
+    // let e2_len = num_integer::binomial(k2, p);
     let mut l1 = vec![ColVec::zero(Rc::clone(&f2), l); e1_len];
     let mut q2e2_us = ColVec::zero(Rc::clone(&f2), l);
     let mut qe_us = ColVec::zero(Rc::clone(&f2), n - k);
     loop {
         h.parity_check_random_standard_form(&mut u, &mut h_sf, &mut pi);
-        // u.copy_identity();
-        // h_sf.copy(h);
         us.mul(&u, s);
         let q1 = SubMat::new(&h_sf, 0, l, 0, k1);
         for i in 0..e1_len {
             for j in 0..l {
                 l1[i][j] = f2.zero();
                 for m in 0..p {
-                    f2.add_assign(&mut l1[i][j], &q1[(j, ex[i].support()[m])]);
+                    f2.add_assign(&mut l1[i][j], &q1[(j, e1_selection[i].support()[m])]);
                 }
             }
         }
-        // debug!("{:#?}", l1);
         let q2 = SubMat::new(&h_sf, 0, l, k1, k);
         for i in 0..e2_len {
             for j in 0..l {
                 q2e2_us[j] = us[j];
                 for m in 0..p {
-                    f2.add_assign(&mut q2e2_us[j], &q2[(j, ex[i].support()[m])]);
+                    f2.add_assign(&mut q2e2_us[j], &q2[(j, e2_selection[i].support()[m])]);
                 }
             }
             for j in 0..e1_len {
@@ -55,22 +59,22 @@ pub fn stern(inst: &Instance, p: usize, l: usize, max_tries: Option<usize>) -> O
                     for m in 0..us.rows() {
                         qe_us[m] = us[m];
                     }
-                    for &col in ex[j].support() {
+                    for &col in e1_selection[j].support() {
                         for i in 0..us.rows() {
                             f2.add_assign(&mut qe_us[i], &h_sf[(i, col)]);
                         }
                     }
-                    for &col in ex[i].support() {
+                    for &col in e2_selection[i].support() {
                         for i in 0..us.rows() {
                             f2.add_assign(&mut qe_us[i], &h_sf[(i, k1 + col)]);
                         }
                     }
                     if qe_us.weight() <= w - 2 * p {
                         let mut e = ColVec::zero(Rc::clone(&f2), n);
-                        for &col in ex[j].support() {
+                        for &col in e1_selection[j].support() {
                             e[col] = f2.one();
                         }
-                        for &col in ex[i].support() {
+                        for &col in e2_selection[i].support() {
                             e[k1 + col] = f2.one();
                         }
                         for (i, x) in qe_us.data().iter().enumerate() {

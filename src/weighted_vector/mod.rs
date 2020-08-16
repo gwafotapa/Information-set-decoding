@@ -64,11 +64,11 @@ impl WeightedVector {
         }
 
         let mut i = 2;
-        while (w >= i) && (self.support[w - i] == n - i) {
+        while (i <= w) && (self.support[w - i] == n - i) {
             i += 1;
         }
 
-        if w < i {
+        if i > w {
             return false;
         }
 

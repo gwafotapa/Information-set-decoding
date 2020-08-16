@@ -66,6 +66,17 @@ fn stern_200_0() {
     assert_eq!(inst.h() * e, *inst.s());
 }
 
+// #[ignore]
+#[test]
+fn stern_300_0() {
+    let inst = Instance::read_instance("instances/SD_300_0").unwrap();
+    let k = inst.h().cols() - inst.h().rows();
+    let p = 2;
+    let l = compute_l(k, p);
+    let e = stern::stern(&inst, p, l, None).unwrap();
+    assert_eq!(inst.h() * e, *inst.s());
+}
+
 // #[test]
 // fn stern_with_solution_10() {
 //     common::log_setup();
