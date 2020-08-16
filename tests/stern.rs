@@ -14,23 +14,12 @@ fn list_weighted_vectors() {
     println!("{:?}", l);
 }
 
-fn compute_l(k: usize, p: usize) -> usize {
-    let mut l = 0;
-    let mut tmp = num_integer::binomial(k - k / 2, p);
-    tmp >>= 1;
-    while tmp != 0 {
-        l += 1;
-        tmp >>= 1;
-    }
-    l
-}
-
 #[test]
 fn stern_10_0() {
     let inst = Instance::read_instance("instances/SD_10_0").unwrap();
     let k = inst.h().cols() - inst.h().rows();
     let p = 2;
-    let l = compute_l(k, p);
+    let l = stern::compute_l(k, p);
     let e = stern::stern(&inst, p, l, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
@@ -40,7 +29,7 @@ fn stern_20_0() {
     let inst = Instance::read_instance("instances/SD_20_0").unwrap();
     let k = inst.h().cols() - inst.h().rows();
     let p = 2;
-    let l = compute_l(k, p);
+    let l = stern::compute_l(k, p);
     let e = stern::stern(&inst, p, l, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
@@ -50,7 +39,7 @@ fn stern_100_0() {
     let inst = Instance::read_instance("instances/SD_100_0").unwrap();
     let k = inst.h().cols() - inst.h().rows();
     let p = 2;
-    let l = compute_l(k, p);
+    let l = stern::compute_l(k, p);
     let e = stern::stern(&inst, p, l, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
@@ -61,7 +50,7 @@ fn stern_200_0() {
     let inst = Instance::read_instance("instances/SD_200_0").unwrap();
     let k = inst.h().cols() - inst.h().rows();
     let p = 2;
-    let l = compute_l(k, p);
+    let l = stern::compute_l(k, p);
     let e = stern::stern(&inst, p, l, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
@@ -72,7 +61,7 @@ fn stern_300_0() {
     let inst = Instance::read_instance("instances/SD_300_0").unwrap();
     let k = inst.h().cols() - inst.h().rows();
     let p = 2;
-    let l = compute_l(k, p);
+    let l = stern::compute_l(k, p);
     let e = stern::stern(&inst, p, l, None).unwrap();
     assert_eq!(inst.h() * e, *inst.s());
 }
@@ -83,7 +72,7 @@ fn stern_300_0() {
 //     let inst = Instance::read_instance("instances/stern_10").unwrap();
 //     let k = inst.h().cols() - inst.h().rows();
 //     let p = 2;
-//     let l = compute_l(k, p);
+//     let l = stern::compute_l(k, p);
 //     debug!(
 //         "n={}   k={}   w={}   p={}   l={}\n",
 //         inst.n(),
@@ -101,7 +90,7 @@ fn stern_with_solution_10() {
     common::log_setup();
     let (n, w, p) = (10, 4, 2);
     let k = n / 2;
-    let l = compute_l(k, p);
+    let l = stern::compute_l(k, p);
     let (inst, x) = generate_instance_with_solution(n, w, p, l);
     assert!(x.weight() == w);
     assert_eq!(inst.h() * &x, *inst.s());

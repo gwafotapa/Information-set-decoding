@@ -120,3 +120,14 @@ pub fn stern_list_weighted_vectors(n: usize, w: usize) -> Vec<WeightedVector> {
     }
     list
 }
+
+pub fn compute_l(k: usize, p: usize) -> usize {
+    let mut l = 0;
+    let mut tmp = num_integer::binomial(k - k / 2, p);
+    tmp >>= 1;
+    while tmp != 0 {
+        l += 1;
+        tmp >>= 1;
+    }
+    l
+}

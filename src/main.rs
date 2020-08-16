@@ -2,7 +2,7 @@ use log::debug;
 use main_error::MainError;
 use std::env;
 
-use information_set_decoding::{instance::Instance, prange};
+use information_set_decoding::{instance::Instance, stern};
 
 // type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -22,7 +22,10 @@ fn main() -> std::result::Result<(), MainError> {
         inst.h(),
         inst.s()
     );
-    let e = prange::prange(&inst, None).unwrap();
+    let k = inst.n() - inst.h().rows();
+    let p = 2;
+    let l = stern::compute_l(k, p);
+    let e = stern::stern(&inst, p, l, None).unwrap();
     for i in 0..e.rows() {
         print!("{}", e[i]);
     }
